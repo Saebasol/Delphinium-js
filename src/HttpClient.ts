@@ -9,12 +9,9 @@ export class HttpClient {
     this.timeout = timeout;
   }
 
-
-  async fetch<Response>(endpoint: string, params?: Record<string, string>, signal?: AbortSignal): Promise<Response> {
+  private async _fetch<Response>(endpoint: string, options?: RequestInit, signal?: AbortSignal): Promise<Response> {
     const url = new URL(`${this.baseURL}${endpoint}`);
-    if (params) {
-      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    }
+    
     let finalSignal: AbortSignal | undefined = signal;
     let internalTimeoutId: ReturnType<typeof setTimeout> | undefined;
     let timeoutController: AbortController | undefined;
@@ -26,8 +23,10 @@ export class HttpClient {
       }, this.timeout);
     }
 
+    // Fetch 
     try {
-      const response = await fetch(url.toString(), { signal: finalSignal });
+      const response = await fetch(url.toString(), { signal: finalSignal, ...options });
+      // Response check
       if (!response.ok) {
         let errorJson;
         try {
@@ -37,34 +36,38 @@ export class HttpClient {
         }
         throw new HeliotropeError(`${response.status} ${errorJson?.message ?? response.statusText}`);
       }
+
       return await response.json() as Response;
+
+      // Error check
     } catch (error) {
-      // If the error is an AbortError and was caused by our timeout, throw the specific HeliotropeError.
+      // AbortError check
       if (error instanceof DOMException && error.name === 'AbortError' && timeoutController?.signal.aborted && timeoutController.signal.reason instanceof HeliotropeError) {
         throw timeoutController.signal.reason;
       }
-      // For all other errors, including external aborts, log and rethrow.
-      console.error("Error during fetch request:", error);
+
+      // Error throw
       throw error;
     } finally {
+      // Cleanup timeout
       if (internalTimeoutId) {
         clearTimeout(internalTimeoutId);
       }
     }
   }
-  async get<Response>(endpoint: string, params?: Record<string, string>, signal?: AbortSignal): Promise<Response> {
-    return await this.fetch<Response>(endpoint, params, signal);
+
+  public async get<Response>(endpoint: string, signal?: AbortSignal): Promise<Response> {
+    return await this._fetch<Response>(endpoint, { method: 'GET' }, signal);
   }
 
-  async post<Body, Response>(endpoint: string, body: Body, signal?: AbortSignal): Promise<Response> {
-    const options: Record<string, any> = {
+  public async post<Body, Response>(endpoint: string, body: Body, signal?: AbortSignal): Promise<Response> {
+    const options: RequestInit = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body),
-      signal
+      body: JSON.stringify(body)
     };
-    return await this.fetch<Response>(endpoint, options);
-  }
+    return await this._fetch<Response>(endpoint, options, signal);
+  }                                             
 }

@@ -1,7 +1,10 @@
-import { GalleryInfo } from '~/models/GalleryInfo';
-import { RawGalleryInfoData } from '~/models/GalleryInfo';
 import { HttpClient } from '../HttpClient';
-import { RawImageData, Image, RawInfoData, Info, RawListData, List, RawRandomRequestData, RawSearchRequestData } from '../models';
+import { RawSearchResultData, SearchResult,
+         RawImageData, Image,
+         RawInfoData, Info,
+         RawListData, List,
+         RawRandomRequestData, RawSearchRequestData,
+         RawGalleryInfoData, GalleryInfo } from '../models';
 
 type WithAbortSignal<T> = T & { abortSignal?: AbortSignal };
 
@@ -22,7 +25,7 @@ export class HitomiService {
      * /gallery/{id}
      */
     public async getGalleryInfo({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<GalleryInfo> {
-        const data = await this.httpClient.get<RawGalleryInfoData>(`/galleryinfo/${id}`, {}, abortSignal);
+        const data = await this.httpClient.get<RawGalleryInfoData>(`/galleryinfo/${id}`, abortSignal);
 
         return new GalleryInfo(data);
     }
@@ -31,7 +34,7 @@ export class HitomiService {
      * /image/{id}
      */
     public async getImage({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<Image> {
-        const data = await this.httpClient.get<RawImageData>(`/image/${id}`, {}, abortSignal);
+        const data = await this.httpClient.get<RawImageData>(`/image/${id}`, abortSignal);
 
         return new Image(data);
     }
@@ -40,7 +43,7 @@ export class HitomiService {
      * /info/{id}
      */
     public async getInfo({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<Info> {
-        const data = await this.httpClient.get<RawInfoData>(`/info/${id}`, {}, abortSignal);
+        const data = await this.httpClient.get<RawInfoData>(`/info/${id}`, abortSignal);
 
         return new Info(data);
     }
@@ -49,7 +52,7 @@ export class HitomiService {
      * /list/{id}
      */
     public async getList({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<List> {
-        const data = await this.httpClient.get<RawListData>(`/list/${id}`, {}, abortSignal);
+        const data = await this.httpClient.get<RawListData>(`/list/${id}`, abortSignal);
 
         return new List(data);
     }
@@ -69,9 +72,9 @@ export class HitomiService {
      * query: string[] (tags)
      * offset: number
      */
-    public async postSearch({ query, offset, abortSignal }: WithAbortSignal<{ query: string[], offset: number }>): Promise<List> {
-        const data = await this.httpClient.post<RawSearchRequestData, RawListData>('/search', { query, offset }, abortSignal);
+    public async postSearch({ query, offset, abortSignal }: WithAbortSignal<{ query: string[], offset: number }>): Promise<SearchResult> {
+        const data = await this.httpClient.post<RawSearchRequestData, RawSearchResultData>('/search', { query, offset }, abortSignal);
 
-        return new List(data);
+        return new SearchResult(data);
     }
 }

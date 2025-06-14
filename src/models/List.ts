@@ -1,15 +1,16 @@
-import { GalleryInfo, RawGalleryInfoData } from "./GalleryInfo";
+import { Info, RawInfoData } from "./Info";
 
 export interface RawListData {
-    list: RawGalleryInfoData[];
+    list: RawInfoData[];
+    total: number;
 }
 
 export class List {
-    public readonly list: GalleryInfo[];
+    public readonly list: Info[];
+    public readonly total: number;
 
     constructor(data: RawListData) {
-        this.list = data.list.map(info => new GalleryInfo(info));
+        this.list = data.list.map(info => new Info(info));
+        this.total = data.total;
     }
 }
-
-// TODO : Search, List 모델 다름, 패치해야함, 지금은 오류발생중
