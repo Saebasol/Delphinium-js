@@ -1,10 +1,13 @@
+import { RawTagsData, Tags } from '~/models/Tags';
 import { HttpClient } from '../HttpClient';
-import { RawSearchResultData, SearchResult,
-         RawImageData, Image,
-         RawInfoData, Info,
-         RawListData, List,
-         RawRandomRequestData, RawSearchRequestData,
-         RawGalleryInfoData, GalleryInfo } from '../models';
+import {
+  RawSearchResultData, SearchResult,
+  RawImageData, Image,
+  RawInfoData, Info,
+  RawListData, List,
+  RawRandomRequestData, RawSearchRequestData,
+  RawGalleryInfoData, GalleryInfo
+} from '../models';
 
 type WithAbortSignal<T> = T & { abortSignal?: AbortSignal };
 
@@ -15,66 +18,75 @@ type WithAbortSignal<T> = T & { abortSignal?: AbortSignal };
  * /api/hitomi/{*}
  */
 export class HitomiService {
-    private httpClient: HttpClient;
+  private httpClient: HttpClient;
 
-    constructor(httpClient: HttpClient) {
-        this.httpClient = httpClient;
-    }
+  constructor(httpClient: HttpClient) {
+    this.httpClient = httpClient;
+  }
 
-    /**
-     * /gallery/{id}
-     */
-    public async getGalleryInfo({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<GalleryInfo> {
-        const data = await this.httpClient.get<RawGalleryInfoData>(`/galleryinfo/${id}`, abortSignal);
+  /**
+   * /gallery/{id}
+   */
+  public async getGalleryInfo({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<GalleryInfo> {
+    const data = await this.httpClient.get<RawGalleryInfoData>(`/galleryinfo/${id}`, abortSignal);
 
-        return new GalleryInfo(data);
-    }
+    return new GalleryInfo(data);
+  }
 
-    /**
-     * /image/{id}
-     */
-    public async getImage({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<Image> {
-        const data = await this.httpClient.get<RawImageData>(`/image/${id}`, abortSignal);
+  /**
+   * /image/{id}
+   */
+  public async getImage({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<Image> {
+    const data = await this.httpClient.get<RawImageData>(`/image/${id}`, abortSignal);
 
-        return new Image(data);
-    }
+    return new Image(data);
+  }
 
-    /**
-     * /info/{id}
-     */
-    public async getInfo({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<Info> {
-        const data = await this.httpClient.get<RawInfoData>(`/info/${id}`, abortSignal);
+  /**
+   * /info/{id}
+   */
+  public async getInfo({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<Info> {
+    const data = await this.httpClient.get<RawInfoData>(`/info/${id}`, abortSignal);
 
-        return new Info(data);
-    }
+    return new Info(data);
+  }
 
-    /**
-     * /list/{id}
-     */
-    public async getList({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<List> {
-        const data = await this.httpClient.get<RawListData>(`/list/${id}`, abortSignal);
+  /**
+   * /list/{id}
+   */
+  public async getList({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<List> {
+    const data = await this.httpClient.get<RawListData>(`/list/${id}`, abortSignal);
 
-        return new List(data);
-    }
+    return new List(data);
+  }
 
-    /**
-     * /random
-     * query: string[] (tags)
-     */
-    public async postRandom({ query, abortSignal }: WithAbortSignal<{ query: string[] }>): Promise<Info> {
-        const data = await this.httpClient.post<RawRandomRequestData, RawInfoData>('/random', { query }, abortSignal);
+  /**
+   * /random
+   * query: string[] (tags)
+   */
+  public async postRandom({ query, abortSignal }: WithAbortSignal<{ query: string[] }>): Promise<Info> {
+    const data = await this.httpClient.post<RawRandomRequestData, RawInfoData>('/random', { query }, abortSignal);
 
-        return new Info(data);
-    }
+    return new Info(data);
+  }
 
-    /**
-     * /search
-     * query: string[] (tags)
-     * offset: number
-     */
-    public async postSearch({ query, offset, abortSignal }: WithAbortSignal<{ query: string[], offset: number }>): Promise<SearchResult> {
-        const data = await this.httpClient.post<RawSearchRequestData, RawSearchResultData>('/search', { query, offset }, abortSignal);
+  /**
+   * /tags
+   */
+  public async postTags(abortSignal: AbortSignal): Promise<Tags> {
+    const data = await this.httpClient.get<RawTagsData>('/tags', abortSignal);
 
-        return new SearchResult(data);
-    }
+    return new Tags(data);
+  }
+
+  /**
+   * /search
+   * query: string[] (tags)
+   * offset: number
+   */
+  public async postSearch({ query, offset, abortSignal }: WithAbortSignal<{ query: string[], offset: number }>): Promise<SearchResult> {
+    const data = await this.httpClient.post<RawSearchRequestData, RawSearchResultData>('/search', { query, offset }, abortSignal);
+
+    return new SearchResult(data);
+  }
 }
