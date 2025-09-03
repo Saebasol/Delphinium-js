@@ -73,7 +73,7 @@ export class HitomiService {
   /**
    * /tags
    */
-  public async postTags(abortSignal: AbortSignal): Promise<Tags> {
+  public async getTags(abortSignal?: AbortSignal): Promise<Tags> {
     const data = await this.httpClient.get<RawTagsData>('/tags', abortSignal);
 
     return new Tags(data);
