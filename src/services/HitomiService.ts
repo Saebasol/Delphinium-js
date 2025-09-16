@@ -6,7 +6,9 @@ import {
   RawInfoData, Info,
   RawListData, List,
   RawRandomRequestData, RawSearchRequestData,
-  RawGalleryInfoData, GalleryInfo
+  RawGalleryInfoData, GalleryInfo,
+  RawThumbnailData,
+  Thumbnail
 } from '../models';
 
 type WithAbortSignal<T> = T & { abortSignal?: AbortSignal };
@@ -85,8 +87,17 @@ export class HitomiService {
    * offset: number
    */
   public async postSearch({ query, offset, abortSignal }: WithAbortSignal<{ query: string[], offset: number }>): Promise<SearchResult> {
-    const data = await this.httpClient.post<RawSearchRequestData, RawSearchResultData>('/search', { query, offset }, abortSignal);
-
+    const data = await this.httpClient.post<RawSearchRequestData, RawSearchResultData>(`/search?offset=${offset}`, { query }, abortSignal);
     return new SearchResult(data);
+  }
+
+  /**
+   * /thumbnail/{id}
+   * offset: number
+   * single: boolean (if true, returns only one result)
+   */
+  public async getThumbnail({ id, single, size, abortSignal }: WithAbortSignal<{ id: number, size: "smallsmall" | "small" | "smallbig" | "big", single: boolean }>): Promise<Thumbnail> {
+    const data = await this.httpClient.get<RawThumbnailData>(`/thumbnail/${id}?single=${single}&size=${size}`, abortSignal);
+    return new Thumbnail(data);
   }
 }

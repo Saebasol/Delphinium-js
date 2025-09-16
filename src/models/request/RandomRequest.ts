@@ -1,3 +1,3 @@
 export interface RawRandomRequestData {
-    query: string[];
+  query: string[];
 }

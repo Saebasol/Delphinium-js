@@ -1,6 +1,8 @@
 export * from "./Artist";
 export * from "./Character";
 export * from "./File";
+export * from "./Thumbnail";
+export * from "./ResolvedFile";
 export * from "./Group";
 export * from "./Language";
 export * from "./Parody";
@@ -13,3 +15,4 @@ export * from "./Search";
 export * from "./request/RandomRequest";
 export * from "./request/SearchRequest";
 export * from "./Tags";
+

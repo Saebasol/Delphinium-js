@@ -44,7 +44,7 @@ export class GalleryInfo {
   public readonly video: string | null;
   public readonly videofilename: string | null;
   public readonly blocked: boolean;
-  public readonly datepublished: string | null;
+  public readonly datepublished: Date | null;
   public readonly artists: Artist[];
   public readonly characters: Character[];
   public readonly files: File[];
@@ -68,7 +68,7 @@ export class GalleryInfo {
     this.video = data.video ?? null;
     this.videofilename = data.videofilename ?? null;
     this.blocked = data.blocked ?? false;
-    this.datepublished = data.datepublished ?? null;
+    this.datepublished = data.datepublished ? new Date(data.datepublished) : null;
     this.artists = data.artists.map(artist => new Artist(artist));
     this.characters = data.characters.map(character => new Character(character));
     this.files = data.files.map(file => new File(file));
