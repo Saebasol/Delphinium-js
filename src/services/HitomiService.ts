@@ -2,13 +2,13 @@ import { RawTagsData, Tags } from '~/models/Tags';
 import { HttpClient } from '../HttpClient';
 import {
   RawSearchResultData, SearchResult,
-  RawImageData, Image,
   RawInfoData, Info,
   RawListData, List,
   RawRandomRequestData, RawSearchRequestData,
   RawGalleryInfoData, GalleryInfo,
-  RawThumbnailData,
-  Thumbnail
+  ResolvedImage,
+  RawResolvedImageData,
+
 } from '../models';
 
 type WithAbortSignal<T> = T & { abortSignal?: AbortSignal };
@@ -38,10 +38,9 @@ export class HitomiService {
   /**
    * /image/{id}
    */
-  public async getImage({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<Image> {
-    const data = await this.httpClient.get<RawImageData>(`/image/${id}`, abortSignal);
-
-    return new Image(data);
+  public async getImage({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<ResolvedImage[]> {
+    const data = await this.httpClient.get<RawResolvedImageData[]>(`/image/${id}`, abortSignal);
+    return data.map(imageData => new ResolvedImage(imageData));
   }
 
   /**
@@ -96,8 +95,8 @@ export class HitomiService {
    * offset: number
    * single: boolean (if true, returns only one result)
    */
-  public async getThumbnail({ id, single, size, abortSignal }: WithAbortSignal<{ id: number, size: "smallsmall" | "small" | "smallbig" | "big", single: boolean }>): Promise<Thumbnail> {
-    const data = await this.httpClient.get<RawThumbnailData>(`/thumbnail/${id}?single=${single}&size=${size}`, abortSignal);
-    return new Thumbnail(data);
+  public async getThumbnail({ id, single, size, abortSignal }: WithAbortSignal<{ id: number, size: "smallsmall" | "small" | "smallbig" | "big", single: boolean }>): Promise<ResolvedImage[]> {
+    const data = await this.httpClient.get<RawResolvedImageData[]>(`/thumbnail/${id}?single=${single}&size=${size}`, abortSignal);
+    return data.map(imageData => new ResolvedImage(imageData));
   }
 }
