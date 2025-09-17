@@ -9,8 +9,8 @@ describe('Thumbnail', () => {
       single: true
     });
 
-    expect(thumbnail.url[0].startsWith('https://')).toBe(true);
-    expect(thumbnail.url.length).toBe(1);
+    expect(thumbnail[0].url.startsWith('https://')).toBe(true);
+    expect(typeof thumbnail[0].file).toBe('object');
   });
 
   test('fetches multiple thumbnails correctly', async () => {
@@ -20,8 +20,8 @@ describe('Thumbnail', () => {
       single: false
     });
 
-    expect(thumbnail.url.length).toBeGreaterThanOrEqual(1);
-    expect(thumbnail.url.every(url => url.startsWith('https://'))).toBe(true);
+    expect(thumbnail.length).toBeGreaterThanOrEqual(1);
+    expect(thumbnail.every(image => image.url.startsWith('https://'))).toBe(true);
   });
 
   test('fetches thumbnail with smallsmall size correctly', async () => {
@@ -31,9 +31,8 @@ describe('Thumbnail', () => {
       single: true
     });
 
-    expect(thumbnail.url[0].startsWith('https://')).toBe(true);
-    expect(thumbnail.url.length).toBe(1);
-    expect(thumbnail.url[0].includes('smallsmall')).toBe(true);
+    expect(thumbnail[0].url.startsWith('https://')).toBe(true);
+    expect(thumbnail[0].url.includes('smallsmall')).toBe(true);
   });
 
   test('fetches thumbnail with small size correctly', async () => {
@@ -43,9 +42,8 @@ describe('Thumbnail', () => {
       single: true
     });
 
-    expect(thumbnail.url[0].startsWith('https://')).toBe(true);
-    expect(thumbnail.url.length).toBe(1);
-    expect(thumbnail.url[0].includes('small')).toBe(true);
+    expect(thumbnail[0].url.startsWith('https://')).toBe(true);
+    expect(thumbnail[0].url.includes('small')).toBe(true);
   });
 
   test('fetches thumbnail with smallbig size correctly', async () => {
@@ -55,9 +53,8 @@ describe('Thumbnail', () => {
       single: true
     });
 
-    expect(thumbnail.url[0].startsWith('https://')).toBe(true);
-    expect(thumbnail.url.length).toBe(1);
-    expect(thumbnail.url[0].includes('smallbig')).toBe(true);
+    expect(thumbnail[0].url.startsWith('https://')).toBe(true);
+    expect(thumbnail[0].url.includes('smallbig')).toBe(true);
   });
 
   test('fetches thumbnail with big size correctly', async () => {
@@ -67,8 +64,7 @@ describe('Thumbnail', () => {
       single: true
     });
 
-    expect(thumbnail.url[0].startsWith('https://')).toBe(true);
-    expect(thumbnail.url.length).toBe(1);
-    expect(thumbnail.url[0].includes('big')).toBe(true);
+    expect(thumbnail[0].url.startsWith('https://')).toBe(true);
+    expect(thumbnail[0].url.includes('big')).toBe(true);
   });
 });
