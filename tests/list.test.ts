@@ -7,6 +7,6 @@ describe('List', () => {
     const list = await global.client.hitomi.getList({ id: 1 });
 
     expect(list.list).toEqual(expect.any(Array));
-    expect(list.total).toEqual(expect.any(Number));
+    expect(list.count).toEqual(expect.any(Number));
   });
 });
