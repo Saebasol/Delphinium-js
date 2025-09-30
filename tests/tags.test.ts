@@ -3,7 +3,6 @@ import '../tests/setup';
 
 describe('Tags', () => {
   test('fetches tags correctly', async () => {
-    // 태그 목록을 가져옵니다
     const tags = await global.client.hitomi.getTags();
 
     expect(tags.artists).toEqual(expect.any(Array));
