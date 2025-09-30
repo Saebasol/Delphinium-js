@@ -55,8 +55,8 @@ export class HitomiService {
   /**
    * /list/{id}
    */
-  public async getList({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<ListResultDTO> {
-    const data = await this.httpClient.get<RawListResultDTOData>(`/list/${id}`, abortSignal);
+  public async getList({ index, abortSignal }: WithAbortSignal<{ index: number }>): Promise<ListResultDTO> {
+    const data = await this.httpClient.get<RawListResultDTOData>(`/list/${index}`, abortSignal);
 
     return new ListResultDTO(data);
   }
