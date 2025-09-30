@@ -7,7 +7,7 @@ declare global {
 // Setup global client for tests
 beforeAll(() => {
   global.client = new HeliotropeClient({
-    baseURL: 'https://heliotrope.saebasol.org/api'
+    baseURL: 'https://heliotrope.saebasol.org'
   });
 });
 

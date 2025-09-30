@@ -1,11 +1,11 @@
-import { Info, RawInfoData } from "./Info";
+import { Info, RawInfoData } from "../entities";
 
 export interface RawSearchResultData {
   result: RawInfoData[];
   count: number;
 }
 
-export class SearchResult {
+export class SearchResultDTO {
   public readonly result: Info[];
   public readonly count: number;
 

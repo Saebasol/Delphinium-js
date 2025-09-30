@@ -1,15 +1,15 @@
-import { RawTagsData, Tags } from '~/models/Tags';
+import { ListResultDTO, RawListResultDTOData, RawSearchResultData, SearchResultDTO } from '../dtos';
 import { HttpClient } from '../HttpClient';
 import {
-  RawSearchResultData, SearchResult,
   RawInfoData, Info,
-  RawListData, List,
-  RawRandomRequestData, RawSearchRequestData,
   RawGalleryInfoData, GalleryInfo,
   ResolvedImage,
   RawResolvedImageData,
+  RawTagsData, Tags
 
-} from '../models';
+} from '../entities';
+import { Size } from '../request/ThumbnailRequest';
+import { RawRandomRequestData, RawSearchRequestData } from '../request';
 
 type WithAbortSignal<T> = T & { abortSignal?: AbortSignal };
 
@@ -55,10 +55,10 @@ export class HitomiService {
   /**
    * /list/{id}
    */
-  public async getList({ id, abortSignal }: WithAbortSignal<{ id: number }>): Promise<List> {
-    const data = await this.httpClient.get<RawListData>(`/list/${id}`, abortSignal);
+  public async getList({ index, abortSignal }: WithAbortSignal<{ index: number }>): Promise<ListResultDTO> {
+    const data = await this.httpClient.get<RawListResultDTOData>(`/list/${index}`, abortSignal);
 
-    return new List(data);
+    return new ListResultDTO(data);
   }
 
   /**
@@ -85,9 +85,9 @@ export class HitomiService {
    * query: string[] (tags)
    * offset: number
    */
-  public async postSearch({ query, offset, abortSignal }: WithAbortSignal<{ query: string[], offset: number }>): Promise<SearchResult> {
+  public async postSearch({ query, offset, abortSignal }: WithAbortSignal<{ query: string[], offset: number }>): Promise<SearchResultDTO> {
     const data = await this.httpClient.post<RawSearchRequestData, RawSearchResultData>(`/search?offset=${offset}`, { query }, abortSignal);
-    return new SearchResult(data);
+    return new SearchResultDTO(data);
   }
 
   /**
@@ -95,7 +95,7 @@ export class HitomiService {
    * offset: number
    * single: boolean (if true, returns only one result)
    */
-  public async getThumbnail({ id, single, size, abortSignal }: WithAbortSignal<{ id: number, size: "smallsmall" | "small" | "smallbig" | "big", single: boolean }>): Promise<ResolvedImage[]> {
+  public async getThumbnail({ id, single, size, abortSignal }: WithAbortSignal<{ id: number, size: Size, single: boolean }>): Promise<ResolvedImage[]> {
     const data = await this.httpClient.get<RawResolvedImageData[]>(`/thumbnail/${id}?single=${single}&size=${size}`, abortSignal);
     return data.map(imageData => new ResolvedImage(imageData));
   }
