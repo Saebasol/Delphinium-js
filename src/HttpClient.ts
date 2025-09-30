@@ -1,4 +1,5 @@
 import { HeliotropeError } from "./error/HeliotropeError";
+import { version } from '../package.json';
 
 export class HttpClient {
   private baseURL: string;
@@ -11,7 +12,7 @@ export class HttpClient {
 
   private async _fetch<Response>(endpoint: string, options?: RequestInit, signal?: AbortSignal): Promise<Response> {
     const url = new URL(`${this.baseURL}${endpoint}`);
-    
+
     let finalSignal: AbortSignal | undefined = signal;
     let internalTimeoutId: ReturnType<typeof setTimeout> | undefined;
     let timeoutController: AbortController | undefined;
@@ -25,7 +26,7 @@ export class HttpClient {
 
     // Fetch 
     try {
-      const response = await fetch(url.toString(), { signal: finalSignal, ...options });
+      const response = await fetch(url.toString(), { signal: finalSignal, ...options, headers: { "User-Agent": `Delphinium-js/${version}` } });
       // Response check
       if (!response.ok) {
         let errorJson;
@@ -69,5 +70,5 @@ export class HttpClient {
       body: JSON.stringify(body)
     };
     return await this._fetch<Response>(endpoint, options, signal);
-  }                                             
+  }
 }
